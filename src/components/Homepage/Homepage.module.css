@@ -1,0 +1,15 @@
+.homepage{
+    margin:0;
+    height: 0;
+    background-color: #EAEDED;
+}
+
+.inventory {
+
+
+}
+
+.itemList {
+    border-radius: 10px;    
+    background-color: white;
+}

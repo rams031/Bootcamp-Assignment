@@ -1,0 +1,18 @@
+.colorRed {
+    background-color: #CD5C5C;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+}
+.colorYellow {
+    background-color: #FFC300;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+}
+.colorGreen {
+    background-color: #148F77;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+}
