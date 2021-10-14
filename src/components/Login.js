@@ -26,7 +26,7 @@ const Login = (props) => {
                             <Form.Control type="password" placeholder="Password" onChange={setPassword}/>
                         </Form.Group>
                         <a variant="primary" type="submit" onClick={loginAction}>
-                            Submit
+                            <Button variant="primary" >Login</Button>
                         </a>
                     </Form>
                 </div>

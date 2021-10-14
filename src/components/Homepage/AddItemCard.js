@@ -5,7 +5,7 @@ import styles from './AddItemCard.module.css';
 
 const AddItemCard = (props) => {
 
-    const { addNewItem } = props;
+    const { addNewItem, id } = props;
 
     const [itemdetails, setItemdetails] = useState({
         itemname: '',
@@ -44,7 +44,7 @@ const AddItemCard = (props) => {
                     <Form.Control type="text" placeholder="Image Url Link" onChange={(e) => {setItemdetails({...itemdetails, itemimage: e.target.value})}}/>
                 </Form.Group>
                 <Form.Group className="mt-3 text-center">
-                    <Button variant="primary" onClick={() => {addNewItem(itemname,itemprice,itemquantity,itemdescription,itemimage)}}>Add Item</Button>
+                    <Button variant="primary" onClick={() => {addNewItem(id, itemname,itemprice,itemquantity,itemdescription,itemimage)}}>Add Item</Button>
                 </Form.Group>
             </Form>
         </div>

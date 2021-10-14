@@ -4,29 +4,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ItemCard from './ItemCard';
 import styles from './Homepage.module.css';
 import AddItemCard from './AddItemCard';
+import Navigationbar from '../Navbar/Navigationbar';
 
 
 const Homepage = (props) => {
 
-  const { item, addNewItem } = props
-
-  const itemCol = [];
+  const { item, addNewItem, deleteItem, addToCart } = props
+  const id = item.length;
 
   return (
     <div className="homepage">
       <div className="inventory">
-        <Navbar bg="light" expand="lg" className="mb-3">
-          <Container>
-            <Navbar.Brand href="#home">Rick Hardware Shop</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link href="#home">Cart</Nav.Link>
-                <Nav.Link href="#link">Logs</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+        <Navigationbar />
         <Container>
           <Row>
             <Col xs={5} md={7} className="itemList">
@@ -35,14 +24,14 @@ const Homepage = (props) => {
                   item.length > 0 ?
                     item.map((item, index) => {
                       return (
-                        <ItemCard item={item} key={index} />
+                        <ItemCard item={item} key={index} deleteItem={deleteItem} addToCart={addToCart} />
                       )
                     }) : null
                 }
               </Row>
             </Col>
             <Col xs={6} md={4}>
-              <AddItemCard addNewItem={addNewItem} />
+              <AddItemCard addNewItem={addNewItem} id={id} />
             </Col>
           </Row>
         </Container>

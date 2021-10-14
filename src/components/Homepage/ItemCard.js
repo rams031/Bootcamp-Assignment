@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Card, Accordion, Navbar, NavDropdown, Nav, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import styles from './ItemCard.module.css';
 
 const ItemCard = (props) => {
 
-    const { item } = props;
+    const { item, key, deleteItem, addToCart } = props;
+    const [quantity, setQuantity] = useState(0)
+    const [alert, setalert] = useState(false)
+
     const backgroundColor = [];
-    console.log(item.ItemCount)
 
     if (item.ItemCount == 0) {
         backgroundColor.push(styles.colorRed)
@@ -16,7 +18,26 @@ const ItemCard = (props) => {
         backgroundColor.push(styles.colorGreen)
     }
 
-    console.log(backgroundColor)
+    const AddItemtoCart = (name, quantity, count, price, picture) => {
+        console.log(quantity >= count)
+
+        //const test = () =
+        //if (quantity <= count) {
+        //    setalert(false)
+        //} //else {
+//
+        //    setInterval(() => {
+        //        setalert(true)
+        //    }, 500)
+        //    setQuantity(0)
+        //    setalert(false)
+        //}
+        //quantity <= count ?
+        //addToCart(item.ItemName, quantity, item.ItemPrice, item.ItemPicture)
+        //: setalert(true);
+        //
+        //setQuantity(0)
+    }
 
     return (
         <div>
@@ -37,19 +58,34 @@ const ItemCard = (props) => {
                                 {item.ItemDescription}
                                 <Col className="mb-2 mt-2">
                                     <Form >
-                                        <Row className="mb-2">
-                                            <Form.Control type="number" placeholder="Quantity" min={0} max={item.ItemCount} />
-                                        </Row >
-                                        <Row className="mb-2">
-                                            <Button>Add to Cart</Button>
-                                        </Row>
-                                        <Row className="mb-2"> 
-                                            <Alert variant='danger'>
-                                                This is a alert—check it out!
-                                            </Alert>
-                                        </Row>
-                                    </Form>
 
+                                        {
+                                            item.ItemCount > 0 ?
+                                                <div>
+                                                    <Row className="mb-2">
+                                                        <Form.Control type="number" placeholder="Quantity" onChange={(e) => { setQuantity(e.target.value) }} value={quantity} />
+                                                    </Row >
+                                                    <Row className="mb-2">
+                                                        <Button onClick={() => { AddItemtoCart(item.ItemName, quantity, item.ItemCount, item.ItemPrice, item.ItemPicture) }}>Add to Cart</Button>
+                                                    </Row>
+                                                </div>
+
+                                                : ""
+                                        }
+                                        <Row className="mb-2 ">
+                                            <Button variant='danger' onClick={() => { deleteItem(key) }}>Delete</Button>
+                                        </Row>
+                                        {
+                                            alert ?
+                                                <div>
+                                                    <Row className="mb-2">
+                                                        <Alert variant='danger'>
+                                                            Quantity Exceeded!
+                                                        </Alert>
+                                                    </Row>
+                                                </div> : null
+                                        }
+                                    </Form>
                                 </Col>
                             </Accordion.Body>
                         </Accordion.Item>

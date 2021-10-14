@@ -1,9 +1,10 @@
 import logo from './logo.svg';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Alert, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './components/Login'
 import Homepage from './components/Homepage/Homepage'
+import Cart from './components/Cart/Cart'
 import ItemCard from './components/Homepage/ItemCard'
 import AddItemCard from './components/Homepage/AddItemCard'
 import { Link } from 'react-router-dom';
@@ -45,10 +46,15 @@ function App() {
     }
   ]
 
+  const [idCount, setIdCount] = useState()
+
   const [itemList, setItemList] = useState({
     itemlist: item
   })
 
+  const [cartList, setCartList] = useState({
+    cartlist: []
+  })
 
   const [notif, setNotif] = useState({
     notification: false
@@ -67,6 +73,8 @@ function App() {
   const { useremail, password } = account;
   const { authenticated } = auth;
   const { notification } = notif;
+
+
 
   const users = [
     {
@@ -96,7 +104,7 @@ function App() {
       console.log(users[i].email)
       if (users[i].email == useremail && users[i].password == password) {
         history.push('/homepage')
-        //setAuth({ ...auth, authenticated: true })
+        setAuth({ ...auth, authenticated: true })
         break;
       } else {
         setNotif({ ...notif, notification: true })
@@ -111,6 +119,7 @@ function App() {
   }
 
   const addNewItem = (itemName, itemPrice, itemQuanity, itemDetails, itemPicture) => {
+
     const newItem = {
       ItemName: itemName,
       ItemPrice: itemPrice,
@@ -125,6 +134,25 @@ function App() {
 
   }
 
+  const deleteItem = (index) => {
+    console.log("gumana")
+    const list = itemlist;
+    list.splice(index, 1)
+    setItemList({ ...itemList, itemlist: list })
+    console.log(list)
+
+  }
+
+  const addToCart = () => {
+    //const newCartItem = {
+    //  CartItemName:
+    //  CartQuantity: ,
+    //  CartPrice: ,
+    //  CartItemPicture: itemPicture
+    //}
+
+  }
+
 
   return (
     <div className="App">
@@ -133,14 +161,17 @@ function App() {
         //<Login notification={notification} loginAction={loginAction} setEmail={setEmail} setPassword={setPassword}/>
         //: <Homepage />
       }
-      
+
 
       <Switch>
         <Route exact path="/">
-          <Login notification={notification} loginAction={loginAction} setEmail={setEmail} setPassword={setPassword}/>
+          <Login notification={notification} loginAction={loginAction} setEmail={setEmail} setPassword={setPassword} />
         </Route>
         <Route path="/homepage">
-          <Homepage item={itemlist} addNewItem={addNewItem} />
+          <Homepage item={itemlist} addNewItem={addNewItem} deleteItem={deleteItem} addToCart={addToCart} />
+        </Route>
+        <Route path="/cart">
+          <Cart />
         </Route>
       </Switch>
 
