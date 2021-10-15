@@ -13,7 +13,8 @@ const Navigationbar = () => {
                     <Nav className="me-auto">
                         <Nav.Link><NavLink to="/homepage"> Homepage</NavLink></Nav.Link>
                         <Nav.Link><NavLink to="/cart"> Cart</NavLink></Nav.Link>
-                        <Nav.Link href="#link">Logs</Nav.Link>
+                        <Nav.Link><NavLink to="/log"> Inventory Log</NavLink></Nav.Link>
+                        <Nav.Link className="justify-content-end"><NavLink to="/">Log Out</NavLink></Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

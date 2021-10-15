@@ -9,14 +9,13 @@ import Navigationbar from '../Navbar/Navigationbar';
 
 const Homepage = (props) => {
 
-  const { item, addNewItem, deleteItem, addToCart } = props
-  const id = item.length;
+  const { item, addNewItem, deleteItem, AddItemtoCart } = props
 
   return (
-    <div className="homepage">
-      <div className="inventory">
+    <div className="homepage" style={{ backgroundColor: 'blanchedalmond'}}>
         <Navigationbar />
-        <Container>
+        <Container  >
+          <h1>Homepage</h1>
           <Row>
             <Col xs={5} md={7} className="itemList">
               <Row xs={1} md={3} className="g-4">
@@ -24,19 +23,17 @@ const Homepage = (props) => {
                   item.length > 0 ?
                     item.map((item, index) => {
                       return (
-                        <ItemCard item={item} key={index} deleteItem={deleteItem} addToCart={addToCart} />
+                        <ItemCard item={item} key={index} deleteItem={deleteItem} AddItemtoCart={AddItemtoCart} />
                       )
                     }) : null
                 }
               </Row>
             </Col>
             <Col xs={6} md={4}>
-              <AddItemCard addNewItem={addNewItem} id={id} />
+              <AddItemCard addNewItem={addNewItem} />
             </Col>
           </Row>
         </Container>
-      </div>
-
     </div>
   )
 }

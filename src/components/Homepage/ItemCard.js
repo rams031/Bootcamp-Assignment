@@ -4,7 +4,7 @@ import styles from './ItemCard.module.css';
 
 const ItemCard = (props) => {
 
-    const { item, key, deleteItem, addToCart } = props;
+    const { item, key, deleteItem, AddItemtoCart } = props;
     const [quantity, setQuantity] = useState(0)
     const [alert, setalert] = useState(false)
 
@@ -16,27 +16,6 @@ const ItemCard = (props) => {
         backgroundColor.push(styles.colorYellow)
     } else if (item.ItemCount >= 10) {
         backgroundColor.push(styles.colorGreen)
-    }
-
-    const AddItemtoCart = (name, quantity, count, price, picture) => {
-        console.log(quantity >= count)
-
-        //const test = () =
-        //if (quantity <= count) {
-        //    setalert(false)
-        //} //else {
-//
-        //    setInterval(() => {
-        //        setalert(true)
-        //    }, 500)
-        //    setQuantity(0)
-        //    setalert(false)
-        //}
-        //quantity <= count ?
-        //addToCart(item.ItemName, quantity, item.ItemPrice, item.ItemPicture)
-        //: setalert(true);
-        //
-        //setQuantity(0)
     }
 
     return (
@@ -66,14 +45,35 @@ const ItemCard = (props) => {
                                                         <Form.Control type="number" placeholder="Quantity" onChange={(e) => { setQuantity(e.target.value) }} value={quantity} />
                                                     </Row >
                                                     <Row className="mb-2">
-                                                        <Button onClick={() => { AddItemtoCart(item.ItemName, quantity, item.ItemCount, item.ItemPrice, item.ItemPicture) }}>Add to Cart</Button>
+                                                        <Button onClick={() => {
+
+                                                            const test = item.ItemCount >= quantity;
+                                                            console.log(test)
+                                                            console.log(quantity)
+                                                            console.log(item.ItemCount)
+
+                                                            //AddItemtoCart(quantity, item.ItemCount, item.ItemName, item.ItemPrice, item.ItemPicture)
+
+                                                            if (test) {
+                                                                AddItemtoCart(quantity, item.ItemCount, item.ItemName, item.ItemPrice, item.ItemPicture)
+                                                                setQuantity(0)
+                                                                setalert(false)
+                                                            } else {
+                                                                setalert(true)
+                                                                setQuantity(0)
+                                                                setInterval(() => {
+                                                                    setalert(false)
+                                                                }, 2000)
+                                                            }
+
+                                                        }}>Add to Cart</Button>
                                                     </Row>
                                                 </div>
 
                                                 : ""
                                         }
                                         <Row className="mb-2 ">
-                                            <Button variant='danger' onClick={() => { deleteItem(key) }}>Delete</Button>
+                                            <Button variant='danger' onClick={() => { deleteItem(key, item.ItemName) }}>Remove</Button>
                                         </Row>
                                         {
                                             alert ?

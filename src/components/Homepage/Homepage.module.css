@@ -1,12 +1,12 @@
 .homepage{
     margin:0;
     height: 0;
-    background-color: #EAEDED;
+    background-color: red;
+    height: 100vh
 }
 
-.inventory {
-
-
+Card {
+    border-radius: 10px;
 }
 
 .itemList {
