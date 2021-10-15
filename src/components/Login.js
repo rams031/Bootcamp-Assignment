@@ -16,7 +16,7 @@ const Login = (props) => {
                                 <strong>Wrong Credential!</strong>
                             </Alert> : ""
                         }
-                        <h1 className="title">Rick Steak House</h1>
+                        <h1 className="title">Rick Hardware Shop</h1>
                         <Form.Group className="mb-5" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" onChange={setEmail} />
@@ -26,7 +26,7 @@ const Login = (props) => {
                             <Form.Control type="password" placeholder="Password" onChange={setPassword}/>
                         </Form.Group>
                         <a variant="primary" type="submit" onClick={loginAction}>
-                            Submit
+                            <Button variant="primary" >Login</Button>
                         </a>
                     </Form>
                 </div>

@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Card, Accordion, Navbar, NavDropdown, Nav, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import styles from './ItemCard.module.css';
 
 const ItemCard = (props) => {
 
-    const { item } = props;
+    const { item, key, deleteItem, AddItemtoCart } = props;
+    const [quantity, setQuantity] = useState(0)
+    const [alert, setalert] = useState(false)
+
     const backgroundColor = [];
-    console.log(item.ItemCount)
 
     if (item.ItemCount == 0) {
         backgroundColor.push(styles.colorRed)
@@ -15,8 +17,6 @@ const ItemCard = (props) => {
     } else if (item.ItemCount >= 10) {
         backgroundColor.push(styles.colorGreen)
     }
-
-    console.log(backgroundColor)
 
     return (
         <div>
@@ -37,19 +37,55 @@ const ItemCard = (props) => {
                                 {item.ItemDescription}
                                 <Col className="mb-2 mt-2">
                                     <Form >
-                                        <Row className="mb-2">
-                                            <Form.Control type="number" placeholder="Quantity" min={0} max={item.ItemCount} />
-                                        </Row >
-                                        <Row className="mb-2">
-                                            <Button>Add to Cart</Button>
-                                        </Row>
-                                        <Row className="mb-2"> 
-                                            <Alert variant='danger'>
-                                                This is a alert—check it out!
-                                            </Alert>
-                                        </Row>
-                                    </Form>
 
+                                        {
+                                            item.ItemCount > 0 ?
+                                                <div>
+                                                    <Row className="mb-2">
+                                                        <Form.Control type="number" placeholder="Quantity" onChange={(e) => { setQuantity(e.target.value) }} value={quantity} />
+                                                    </Row >
+                                                    <Row className="mb-2">
+                                                        <Button onClick={() => {
+
+                                                            const test = item.ItemCount >= quantity;
+                                                            console.log(test)
+                                                            console.log(quantity)
+                                                            console.log(item.ItemCount)
+
+                                                            //AddItemtoCart(quantity, item.ItemCount, item.ItemName, item.ItemPrice, item.ItemPicture)
+
+                                                            if (test) {
+                                                                AddItemtoCart(quantity, item.ItemCount, item.ItemName, item.ItemPrice, item.ItemPicture)
+                                                                setQuantity(0)
+                                                                setalert(false)
+                                                            } else {
+                                                                setalert(true)
+                                                                setQuantity(0)
+                                                                setInterval(() => {
+                                                                    setalert(false)
+                                                                }, 2000)
+                                                            }
+
+                                                        }}>Add to Cart</Button>
+                                                    </Row>
+                                                </div>
+
+                                                : ""
+                                        }
+                                        <Row className="mb-2 ">
+                                            <Button variant='danger' onClick={() => { deleteItem(key, item.ItemName) }}>Remove</Button>
+                                        </Row>
+                                        {
+                                            alert ?
+                                                <div>
+                                                    <Row className="mb-2">
+                                                        <Alert variant='danger'>
+                                                            Quantity Exceeded!
+                                                        </Alert>
+                                                    </Row>
+                                                </div> : null
+                                        }
+                                    </Form>
                                 </Col>
                             </Accordion.Body>
                         </Accordion.Item>
