@@ -7,7 +7,7 @@
     background-color:blanchedalmond
   }
   .form {
-    text-align: center;
+    text-align: left;
     display: flex;
     flex-direction: row;
     padding: 50px;
@@ -23,7 +23,14 @@
     margin: 100px;
     padding: 50px;
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-    margin: 0 200px;
     padding: 50px;
     border-radius: 10px;
+  }
+
+  .validation {
+    border: 1px solid red;
+  }
+
+  .redtext {
+    color: red;
   }
