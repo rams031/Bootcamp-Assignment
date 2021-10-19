@@ -2,6 +2,16 @@ import logo from './logo.svg';
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Alert, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { validateChange, userEmailChange, userUserNameChange } from './redux/reducer/user-reducer';
+import axios from 'axios';
+import { Switch, Route, useHistory } from 'react-router';
+import withLoading from './HOC/withLoading';
+import { Link } from 'react-router-dom';
+import 'bulma/css/bulma.min.css';
+import 'animate.css';
+import './App.css';
+
 import Login from './components/Login'
 import Homepage from './components/Homepage/Homepage'
 import Cart from './components/Cart/Cart'
@@ -10,21 +20,12 @@ import ItemCard from './components/Homepage/ItemCard'
 import AddItemCard from './components/Homepage/AddItemCard'
 import CreateUser from './components/CreateUser/CreateUser'
 import TestLogin from './components/TestLogin/TestLogin'
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { Switch, Route, useHistory } from 'react-router';
-import './App.css';
 
 function App() {
 
   const history = useHistory();
+  
 
-  useEffect(() => {
-    axios.get("https://jsonplaceholder.typicode.com/users")
-      .then((response) => {
-        setUsersApi(response.data);
-      })
-  }, []);
 
   const item = [
     {
@@ -141,23 +142,32 @@ function App() {
     setAccount({ ...account, username: e.target.value })
   }
 
+  const inputEmail = useSelector(state => state.account.email);
+  const inputUsername = useSelector(state => state.account.username);
+  const validation = useSelector(state => state.account.validate);
+
+  console.log(inputEmail)
+
+  const dispatch = useDispatch()
   const loginAction = (e) => {
+    
 
     const emailValidation = useremail.includes("@") && useremail.includes(".");
     const emailAuthentication = usersApi.find(item => item.email === useremail);
     const userNameAuthentication = usersApi.find(item => item.username === username);
 
-      if (!emailValidation) {
-        notificationMessage = "Email Incorrect Format";
-        setLoginValidation({ message: notificationMessage })
-        setNotif({ ...notif, notification: true })
 
-        setInterval(() => {
-          setNotif({ ...notif, notification: false })
-          setLoginValidation({ message: '' })
-        }, 3000)
-      }
-    
+    if (!emailValidation) {
+      notificationMessage = "Email Incorrect Format";
+      setLoginValidation({ message: notificationMessage })
+      setNotif({ ...notif, notification: true })
+
+      setInterval(() => {
+        setNotif({ ...notif, notification: false })
+        setLoginValidation({ message: '' })
+      }, 3000)
+    }
+
 
     if (!useremail && !username || useremail && !username || !useremail && username) {
       notificationMessage = "Make sure to fill all fields";
@@ -171,11 +181,15 @@ function App() {
     }
 
     if (useremail != '' && username != '') {
-      console.log("may laman parehas")
       if (emailAuthentication && userNameAuthentication) {
+
+        dispatch(validateChange(true))
+        dispatch(userEmailChange(useremail))
+        dispatch(userUserNameChange(username))
+
         history.push('/homepage')
-        setAuth({ ...auth, authenticated: true })
-      }
+        //setAuth({ ...auth, authenticated: true })
+      }//
     }
 
     if (!userNameAuthentication) {
@@ -347,27 +361,33 @@ function App() {
   const remainingTable = itemlist;
   let notificationMessage;
   let productNotificationMessage;
-  
 
   useEffect(() => {
-    
-    if(searchProduct) { 
+    axios.get("https://jsonplaceholder.typicode.com/users")
+      .then((response) => {
+        setUsersApi(response.data);
+      })
+  }, []);
+
+  useEffect(() => {
+
+    if (searchProduct) {
       console.log(itemlist)
       const filteredTodos = itemlist.filter((item) => item.ItemName.includes(searchProduct))
       console.log(filteredTodos)
       setItemList({ itemlist: filteredTodos })
     }
 
-    if(!searchProduct) {
+    if (!searchProduct) {
       console.log(searchProduct)
       console.log(remainingTable)
       setItemList({ itemlist: remainingTable })
       console.log(itemlist)
     }
- 
+
 
   }, [searchProduct]);
- 
+
 
   console.log(usersApi)
 
@@ -420,4 +440,4 @@ function App() {
   );
 }
 
-export default App;
+export default withLoading(App);

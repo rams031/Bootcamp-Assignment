@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Login.module.css'
+import Loader from '../Loader/Loader';
+import withLoading from '../HOC/withLoading';
+import { useDispatch } from 'react-redux';
 
 const Login = (props) => {
     const { notification, loginAction, setEmail, setUsername, useremail, username, message } = props;
@@ -40,6 +43,7 @@ const Login = (props) => {
     useEffect(() => {
         validateForm();
     }, [useremail, username]);
+
 
 
 

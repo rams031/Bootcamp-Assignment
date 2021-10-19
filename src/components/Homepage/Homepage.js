@@ -5,6 +5,7 @@ import ItemCard from './ItemCard';
 import styles from './Homepage.module.css';
 import AddItemCard from './AddItemCard';
 import Navigationbar from '../Navbar/Navigationbar';
+import userRestriction from "../../HOC/userRestriction";
 
 
 const Homepage = (props) => {
@@ -71,4 +72,4 @@ const Homepage = (props) => {
   )
 }
 
-export default Homepage
+export default userRestriction(Homepage)

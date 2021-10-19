@@ -1,36 +1,29 @@
 .cards {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    display: flex;
-    background-color:blanchedalmond
-  }
-  .form {
-    text-align: left;
-    display: flex;
-    flex-direction: row;
-    padding: 50px;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-    background-color:white
-  }
-  
-  .title {
-    font-weight: bold;
-  }
-  .Form-Login {
-    margin: 100px;
-    padding: 50px;
-    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-    padding: 50px;
-    border-radius: 10px;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  display: flex;
+  background-color:blanchedalmond
+}
+.form {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  background-color:white
+}
 
-  .validation {
-    border: 1px solid red;
-  }
-
-  .redtext {
-    color: red;
-  }
+.title {
+  font-weight: bold;
+}
+.Form-Login {
+  margin: 100px;
+  padding: 50px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  margin: 0 200px;
+  padding: 50px;
+  border-radius: 10px;
+}
