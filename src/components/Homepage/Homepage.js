@@ -5,37 +5,71 @@ import ItemCard from './ItemCard';
 import styles from './Homepage.module.css';
 import AddItemCard from './AddItemCard';
 import Navigationbar from '../Navbar/Navigationbar';
+import userRestriction from "../../HOC/userRestriction";
 
 
 const Homepage = (props) => {
 
-  const { item, addNewItem, deleteItem, AddItemtoCart } = props
+  const { 
+    item, 
+    addNewItem, 
+    deleteItem, 
+    AddItemtoCart, 
+    productNotification, 
+    productValidationMessage, 
+    itemdetails, 
+    setItemname, 
+    setItemprice, 
+    setItemquantity, 
+    setItemdescription, 
+    setItemimage,
+    searchProductHandler } = props
 
   return (
-    <div className="homepage" style={{ backgroundColor: 'blanchedalmond'}}>
-        <Navigationbar />
-        <Container  >
-          <h1>Homepage</h1>
-          <Row>
-            <Col xs={5} md={7} className="itemList">
-              <Row xs={1} md={3} className="g-4">
-                {
-                  item.length > 0 ?
-                    item.map((item, index) => {
-                      return (
-                        <ItemCard item={item} key={index} deleteItem={deleteItem} AddItemtoCart={AddItemtoCart} />
-                      )
-                    }) : null
-                }
-              </Row>
-            </Col>
-            <Col xs={6} md={4}>
-              <AddItemCard addNewItem={addNewItem} />
-            </Col>
-          </Row>
-        </Container>
+    <div className="homepage" style={{ backgroundColor: 'blanchedalmond' }}>
+      <Navigationbar />
+      <Container  >
+        <Row>
+          <Col xs={5} md={7} className="itemList">
+            <h1>Homepage</h1>
+            <Form>
+              <Form.Group className="mb-3">
+                <Form.Control type="text" placeholder="Search" onChange={searchProductHandler} />
+              </Form.Group>
+            </Form>
+          </Col>
+          <Col xs={6} md={4}>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={5} md={7} className="itemList">
+            <Row xs={1} md={3} className="g-4">
+              {
+                item.length > 0 ?
+                  item.map((item, index) => {
+                    return (
+                      <ItemCard item={item} key={index} deleteItem={deleteItem} AddItemtoCart={AddItemtoCart} />
+                    )
+                  }) : null
+              }
+            </Row>
+          </Col>
+          <Col xs={6} md={4}>
+            <AddItemCard addNewItem={addNewItem}
+              productNotification={productNotification}
+              productValidationMessage={productValidationMessage}
+              itemdetails={itemdetails}
+              setItemname={setItemname}
+              setItemprice={setItemprice}
+              setItemquantity={setItemquantity}
+              setItemdescription={setItemdescription}
+              setItemimage={setItemimage}
+            />
+          </Col>
+        </Row>
+      </Container>
     </div>
   )
 }
 
-export default Homepage
+export default userRestriction(Homepage)

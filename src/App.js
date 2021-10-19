@@ -2,19 +2,30 @@ import logo from './logo.svg';
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Alert, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { validateChange, userEmailChange, userUserNameChange } from './redux/reducer/user-reducer';
+import axios from 'axios';
+import { Switch, Route, useHistory } from 'react-router';
+import withLoading from './HOC/withLoading';
+import { Link } from 'react-router-dom';
+import 'bulma/css/bulma.min.css';
+import 'animate.css';
+import './App.css';
+
 import Login from './components/Login'
 import Homepage from './components/Homepage/Homepage'
 import Cart from './components/Cart/Cart'
 import Log from './components/Log/Log'
 import ItemCard from './components/Homepage/ItemCard'
 import AddItemCard from './components/Homepage/AddItemCard'
-import { Link } from 'react-router-dom';
-import { Switch, Route, useHistory } from 'react-router';
-import './App.css';
+import CreateUser from './components/CreateUser/CreateUser'
+import TestLogin from './components/TestLogin/TestLogin'
 
 function App() {
 
   const history = useHistory();
+  
+
 
   const item = [
     {
@@ -47,10 +58,30 @@ function App() {
     }
   ]
 
+  const users = [
+    {
+      id: 1,
+      email: 'pat@gmail.com',
+      password: 123
+    }
+  ]
+
   const [idCount, setIdCount] = useState()
+
+  const [usersApi, setUsersApi] = useState([])
+
+  const [searchProduct, setSearchProduct] = useState("")
 
   const [itemList, setItemList] = useState({
     itemlist: item
+  })
+
+  const [itemdetails, setItemdetails] = useState({
+    itemname: '',
+    itemprice: 0,
+    itemquantity: 0,
+    itemdescription: '',
+    itemimage: ''
   })
 
   const [cartList, setCartList] = useState({
@@ -65,84 +96,202 @@ function App() {
     notification: false
   })
 
+  const [productNotif, setProductNotif] = useState({
+    productNotification: false
+  })
+
+  const [listProductValidationMessage, setListProductValidationMessage] = useState({
+    productValidationMessage: ''
+  })
+
+  const setItemname = (e) => {
+    setItemdetails({ ...itemdetails, itemname: e.target.value })
+  }
+
+  const setItemprice = (e) => {
+    setItemdetails({ ...itemdetails, itemprice: e.target.value })
+  }
+  const setItemquantity = (e) => {
+    setItemdetails({ ...itemdetails, itemquantity: e.target.value })
+  }
+  const setItemdescription = (e) => {
+    setItemdetails({ ...itemdetails, itemdescription: e.target.value })
+  }
+  const setItemimage = (e) => {
+    setItemdetails({ ...itemdetails, itemimage: e.target.value })
+  }
+
   const [auth, setAuth] = useState({
     authenticated: false
   })
 
   const [account, setAccount] = useState({
     useremail: '',
-    password: ''
+    username: ''
   })
 
-  const { loglist } = logList;
-  const { cartlist } = cartList;
-  const { itemlist } = itemList;
-  const { useremail, password } = account;
-  const { authenticated } = auth;
-  const { notification } = notif;
-
-  const users = [
-    {
-      id: 1,
-      email: 'pat@gmail.com',
-      password: 123
-    },
-    {
-      id: 2,
-      email: 'rick@gmail.com',
-      password: 321
-    }
-  ]
+  const [loginValidation, setLoginValidation] = useState({
+    message: ''
+  })
 
   const setEmail = (e) => {
     setAccount({ ...account, useremail: e.target.value })
   }
 
-  const setPassword = (e) => {
-    setAccount({ ...account, password: e.target.value })
+  const setUsername = (e) => {
+    setAccount({ ...account, username: e.target.value })
   }
 
-  const loginAction = () => {
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].email == useremail && users[i].password == password) {
-        history.push('/homepage')
-        setAuth({ ...auth, authenticated: true })
-        break;
-      } else {
-        setNotif({ ...notif, notification: true })
+  const inputEmail = useSelector(state => state.account.email);
+  const inputUsername = useSelector(state => state.account.username);
+  const validation = useSelector(state => state.account.validate);
 
-        setInterval(() => {
-          setNotif({ ...notif, notification: false })
-        }, 3000)
-      }
+  console.log(inputEmail)
+
+  const dispatch = useDispatch()
+  const loginAction = (e) => {
+    
+
+    const emailValidation = useremail.includes("@") && useremail.includes(".");
+    const emailAuthentication = usersApi.find(item => item.email === useremail);
+    const userNameAuthentication = usersApi.find(item => item.username === username);
+
+
+    if (!emailValidation) {
+      notificationMessage = "Email Incorrect Format";
+      setLoginValidation({ message: notificationMessage })
+      setNotif({ ...notif, notification: true })
+
+      setInterval(() => {
+        setNotif({ ...notif, notification: false })
+        setLoginValidation({ message: '' })
+      }, 3000)
     }
 
-    setAccount({ ...account, useremail: '', password: '' })
+
+    if (!useremail && !username || useremail && !username || !useremail && username) {
+      notificationMessage = "Make sure to fill all fields";
+      setLoginValidation({ message: notificationMessage })
+      setNotif({ ...notif, notification: true })
+
+      setInterval(() => {
+        setNotif({ ...notif, notification: false })
+        setLoginValidation({ message: '' })
+      }, 3000)
+    }
+
+    if (useremail != '' && username != '') {
+      if (emailAuthentication && userNameAuthentication) {
+
+        dispatch(validateChange(true))
+        dispatch(userEmailChange(useremail))
+        dispatch(userUserNameChange(username))
+
+        history.push('/homepage')
+        //setAuth({ ...auth, authenticated: true })
+      }//
+    }
+
+    if (!userNameAuthentication) {
+      notificationMessage = "Wrong Username Credential";
+      setLoginValidation({ message: notificationMessage })
+      setNotif({ ...notif, notification: true })
+
+      setInterval(() => {
+        setNotif({ ...notif, notification: false })
+        setLoginValidation({ message: '' })
+      }, 3000)
+    }
+
+    if (!userNameAuthentication && !emailAuthentication) {
+      notificationMessage = "Wrong Credential";
+      setLoginValidation({ message: notificationMessage })
+      setNotif({ ...notif, notification: true })
+
+      setInterval(() => {
+        setNotif({ ...notif, notification: false })
+        setLoginValidation({ message: '' })
+      }, 3000)
+    }
+
+    if (!emailAuthentication) {
+      notificationMessage = "Wrong Email Credential";
+      setLoginValidation({ message: notificationMessage })
+      setNotif({ ...notif, notification: true })
+
+      setInterval(() => {
+        setNotif({ ...notif, notification: false })
+        setLoginValidation({ message: '' })
+      }, 3000)
+    }
+
+    if (!userNameAuthentication) {
+      console.log("wrong Credential")
+    } else { console.log("right username") }
+    console.log(usersApi)
+    console.log(emailAuthentication)
+
+
+
+
+
+
+
+    //for (let i = 0; i < users.length; i++) {
+    //  if (users[i].email == useremail && users[i].password == password) {
+    //    history.push('/homepage')
+    //    setAuth({ ...auth, authenticated: true })
+    //    break;
+    //  } else {
+    //    setNotif({ ...notif, notification: true })
+    //    setAccount({ ...account, useremail: '', password: '' })
+    //
+    //    setInterval(() => {
+    //      setNotif({ ...notif, notification: false })
+    //       
+    //    }, 3000)
+    //    
+    //  }
+    //}
   }
 
   const addNewItem = (itemName, itemPrice, itemQuanity, itemDetails, itemPicture) => {
+    if (!itemName || !itemPrice || !itemQuanity || !itemDetails || !itemPicture) {
+      productNotificationMessage = "Make sure to fill up all fields";
+      setListProductValidationMessage({ productValidationMessage: productNotificationMessage })
+      setProductNotif({ ...productNotification, productNotification: true })
 
-    const newItem = {
-      ItemName: itemName,
-      ItemPrice: itemPrice,
-      ItemCount: itemQuanity,
-      ItemDescription: itemDetails,
-      ItemPicture: itemPicture
+      setInterval(() => {
+        setProductNotif({ ...productNotification, productNotification: false })
+        setListProductValidationMessage({ productValidationMessage: '' })
+      }, 5000)
     }
 
-    const list = itemlist;
-    list.push(newItem)
-    setItemList({ ...itemList, itemlist: list })
+    if (itemName && itemPrice && itemQuanity && itemDetails && itemPicture) {
 
-    const newLog = {
-      ItemName: itemName,
-      ActionName: 'New Item Added',
-      Action: 'removed'
+      const newItem = {
+        ItemName: itemName,
+        ItemPrice: itemPrice,
+        ItemCount: itemQuanity,
+        ItemDescription: itemDetails,
+        ItemPicture: itemPicture
+      }
+
+      const list = itemlist;
+      list.push(newItem)
+      setItemList({ ...itemList, itemlist: list })
+
+      const newLog = {
+        ItemName: itemName,
+        ActionName: 'New Item Added',
+        Action: 'removed'
+      }
+
+      const log = loglist;
+      log.push(newLog)
+      setLogList({ ...logList, loglist: log })
+
     }
-
-    const log = loglist; 
-    log.push(newLog)
-    setLogList({...logList, loglist: log})
 
 
   }
@@ -150,7 +299,7 @@ function App() {
   const deleteItem = (index, itemName) => {
 
     const itemindex = itemlist.findIndex(
-      item =>  item.ItemName === itemName 
+      item => item.ItemName === itemName
     )
 
     const list = itemlist;
@@ -164,16 +313,16 @@ function App() {
       Action: 'added'
     }
 
-    const log = loglist; 
+    const log = loglist;
     log.push(newLog)
-    setLogList({...logList, loglist: log})
+    setLogList({ ...logList, loglist: log })
 
   }
 
   const AddItemtoCart = (cart, count, name, price, picture) => {
 
     const index = itemlist.findIndex(
-      item =>  item.ItemName === name 
+      item => item.ItemName === name
     )
 
     const newCartItem = {
@@ -181,29 +330,97 @@ function App() {
       CartItemName: name,
       CartQuantity: count,
       CartPrice: price,
-      CartItemPicture: picture 
+      CartItemPicture: picture
     }
 
     const items = itemlist;
     items[index].ItemCount = count - cart;
-    setItemList({...itemlist, itemlist: items})
-    
+    setItemList({ ...itemlist, itemlist: items })
+
     const list = cartlist;
     list.push(newCartItem)
-    setCartList({...cartList, cartList: list})
+    setCartList({ ...cartList, cartList: list })
     console.log(cartlist)
 
   }
+
+  const searchProductHandler = (e) => {
+    setSearchProduct(e.target.value)
+    console.log(searchProduct)
+  }
+
+  const { productValidationMessage } = listProductValidationMessage;
+  const { productNotification } = productNotif;
+  const { message } = loginValidation;
+  const { loglist } = logList;
+  const { cartlist } = cartList;
+  const { itemlist } = itemList;
+  const { useremail, username } = account;
+  const { authenticated } = auth;
+  const { notification } = notif;
+  const remainingTable = itemlist;
+  let notificationMessage;
+  let productNotificationMessage;
+
+  useEffect(() => {
+    axios.get("https://jsonplaceholder.typicode.com/users")
+      .then((response) => {
+        setUsersApi(response.data);
+      })
+  }, []);
+
+  useEffect(() => {
+
+    if (searchProduct) {
+      console.log(itemlist)
+      const filteredTodos = itemlist.filter((item) => item.ItemName.includes(searchProduct))
+      console.log(filteredTodos)
+      setItemList({ itemlist: filteredTodos })
+    }
+
+    if (!searchProduct) {
+      console.log(searchProduct)
+      console.log(remainingTable)
+      setItemList({ itemlist: remainingTable })
+      console.log(itemlist)
+    }
+
+
+  }, [searchProduct]);
+
+
+  console.log(usersApi)
+
 
   return (
     <div className="App">
 
       <Switch>
         <Route exact path="/">
-          <Login notification={notification} loginAction={loginAction} setEmail={setEmail} setPassword={setPassword} />
+          <Login
+            notification={notification}
+            loginAction={loginAction}
+            setEmail={setEmail}
+            setUsername={setUsername}
+            useremail={useremail}
+            username={username}
+            message={message} />
         </Route>
         <Route path="/homepage">
-          <Homepage item={itemlist} addNewItem={addNewItem} deleteItem={deleteItem} AddItemtoCart={AddItemtoCart} />
+          <Homepage
+            item={itemlist}
+            addNewItem={addNewItem}
+            deleteItem={deleteItem}
+            AddItemtoCart={AddItemtoCart}
+            productNotification={productNotification}
+            productValidationMessage={productValidationMessage}
+            itemdetails={itemdetails}
+            setItemname={setItemname}
+            setItemprice={setItemprice}
+            setItemquantity={setItemquantity}
+            setItemdescription={setItemdescription}
+            setItemimage={setItemimage}
+            searchProductHandler={searchProductHandler} />
         </Route>
         <Route path="/cart">
           <Cart cartlist={cartlist} />
@@ -211,10 +428,16 @@ function App() {
         <Route path="/log">
           <Log loglist={loglist} />
         </Route>
+        <Route path="/createuser">
+          <CreateUser />
+        </Route>
+        <Route path="/testlogin">
+          <TestLogin />
+        </Route>
       </Switch>
 
     </div>
   );
 }
 
-export default App;
+export default withLoading(App);
